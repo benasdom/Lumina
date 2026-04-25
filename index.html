@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumina — AI Image Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- AMBIENT ORBS -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg class="logo-icon" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="14" stroke="url(#lg)" stroke-width="1.5"/>
+      <path d="M10 16 L16 10 L22 16 L16 22 Z" fill="url(#lg2)" opacity="0.9"/>
+      <circle cx="16" cy="16" r="3" fill="url(#lg3)"/>
+      <defs>
+        <linearGradient id="lg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#7c6aff"/><stop offset="1" stop-color="#a855f7"/>
+        </linearGradient>
+        <linearGradient id="lg2" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#7c6aff" stop-opacity="0.4"/><stop offset="1" stop-color="#06b6d4" stop-opacity="0.4"/>
+        </linearGradient>
+        <linearGradient id="lg3" x1="10" y1="10" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#a855f7"/><stop offset="1" stop-color="#06b6d4"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    Lumina
+  </a>
+  <div class="nav-actions">
+    <div class="api-badge">Gemini Image API</div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <div class="eyebrow-dot"></div>
+    Powered by Google Gemini
+  </div>
+  <h1 class="hero-title">Imagine <em>anything</em><br>into existence</h1>
+  <p class="hero-sub">Transform words into stunning visuals with the power of Google's most capable AI. Your creative studio awaits.</p>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    Scroll to create
+  </div>
+</section>
+
+<!-- STUDIO -->
+<main class="studio">
+
+  <!-- PROMPT PANEL -->
+  <div class="prompt-panel reveal">
+    <div class="panel-header">
+      <div class="panel-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </div>
+      <div>
+        <div class="panel-title">Image Studio</div>
+        <div class="panel-sub">Describe what you'd like to create</div>
+      </div>
+    </div>
+
+    <!-- API Key -->
+    <div class="api-row">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      <input type="password" class="api-input" id="apiKey" placeholder="AIza... — paste your Google AI Studio API key" autocomplete="off" spellcheck="false">
+    </div>
+
+    <!-- Prompt -->
+    <textarea class="prompt-textarea" id="promptInput" placeholder="A serene Japanese garden at golden hour, cherry blossoms falling, koi pond reflection, cinematic lighting, 8K ultra-detailed..."></textarea>
+
+    <!-- Style Chips -->
+    <div class="style-row" id="styleChips">
+      <div class="style-chip active" data-style="">No style</div>
+      <div class="style-chip" data-style="photorealistic, DSLR photography">Photorealistic</div>
+      <div class="style-chip" data-style="anime illustration, Studio Ghibli style">Anime</div>
+      <div class="style-chip" data-style="oil painting, classical art, museum quality">Oil Painting</div>
+      <div class="style-chip" data-style="cyberpunk neon aesthetic, futuristic city">Cyberpunk</div>
+      <div class="style-chip" data-style="watercolor painting, soft edges, pastel">Watercolor</div>
+      <div class="style-chip" data-style="3D render, octane render, CGI">3D Render</div>
+      <div class="style-chip" data-style="pixel art, 16-bit, retro game">Pixel Art</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-row">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <button class="model-pick-btn" onclick="openModelPicker()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+          Browse Models
+        </button>
+        <div class="model-selected-wrap">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="selectedModelLabel" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);">none selected</span>
+        </div>
+        <select class="size-select" id="numImages">
+          <option value="1">1 image</option>
+          <option value="2">2 images</option>
+          <option value="4" selected>4 images</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div class="status-bar">
+          <div class="status-dot idle" id="statusDot"></div>
+          <span id="statusText">Ready to generate</span>
+        </div>
+        <button class="generate-btn" id="generateBtn" onclick="generateImages()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+          <span class="btn-spinner"></span>
+          <span class="btn-text">Generate</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="output-section reveal reveal-delay-1" id="outputSection">
+    <div class="empty-state" id="emptyState">
+      <!-- SVG Animation -->
+      <div class="empty-svg-wrap">
+        <svg viewBox="0 0 160 140" width="160" height="140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="eg1" x1="0" y1="0" x2="160" y2="140" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#7c6aff" stop-opacity="0.3"/>
+              <stop offset="1" stop-color="#a855f7" stop-opacity="0.1"/>
+            </linearGradient>
+            <linearGradient id="eg2" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#7c6aff"/><stop offset="1" stop-color="#06b6d4"/>
+            </linearGradient>
+          </defs>
+          <!-- frame -->
+          <rect x="20" y="20" width="120" height="100" rx="12" fill="url(#eg1)" stroke="rgba(124,106,255,0.3)" stroke-width="1"/>
+          <!-- mountains -->
+          <path d="M30 105 L60 60 L80 80 L100 50 L130 105 Z" fill="rgba(124,106,255,0.2)" stroke="rgba(124,106,255,0.4)" stroke-width="1" stroke-linejoin="round"/>
+          <!-- sun -->
+          <circle cx="110" cy="50" r="12" fill="url(#eg2)" opacity="0.6">
+            <animate attributeName="r" values="12;14;12" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.6;0.8;0.6" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <!-- stars -->
+          <circle cx="40" cy="35" r="1.5" fill="rgba(124,106,255,0.6)"><animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/></circle>
+          <circle cx="55" cy="28" r="1" fill="rgba(168,85,247,0.5)"><animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite" begin="0.5s"/></circle>
+          <circle cx="70" cy="32" r="1.5" fill="rgba(6,182,212,0.5)"><animate attributeName="opacity" values="0.5;1;0.5" dur="1.8s" repeatCount="indefinite" begin="1s"/></circle>
+          <!-- sparkle lines -->
+          <line x1="80" y1="8" x2="80" y2="16" stroke="url(#eg2)" stroke-width="1.5" stroke-linecap="round"><animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/></line>
+          <line x1="76" y1="12" x2="84" y2="12" stroke="url(#eg2)" stroke-width="1.5" stroke-linecap="round"><animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/></line>
+        </svg>
+      </div>
+      <div class="empty-title">Your canvas awaits</div>
+      <div class="empty-sub">Enter a prompt above and hit Generate to bring your vision to life</div>
+    </div>
+    <div class="output-grid" id="outputGrid" style="display:none;"></div>
+  </div>
+
+</main>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="feature-card reveal">
+    <div class="feature-icon purple">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c6aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+      </svg>
+    </div>
+    <div class="feature-h">Natural language</div>
+    <div class="feature-p">Describe your vision in plain English — no technical prompts needed. Gemini understands context and nuance.</div>
+  </div>
+  <div class="feature-card reveal reveal-delay-1">
+    <div class="feature-icon cyan">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+      </svg>
+    </div>
+    <div class="feature-h">Multiple styles</div>
+    <div class="feature-p">From photorealistic to anime, oil painting to pixel art — explore unlimited aesthetic directions instantly.</div>
+  </div>
+  <div class="feature-card reveal reveal-delay-2">
+    <div class="feature-icon amber">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+      </svg>
+    </div>
+    <div class="feature-h">Instant results</div>
+    <div class="feature-p">Generate up to 4 images simultaneously in seconds. Download, refine, or use as creative starting points.</div>
+  </div>
+</section>
+
+<footer>
+  <span style="opacity:0.5">Built with</span>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="#a855f7" style="vertical-align:middle;margin:0 4px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+  <span style="opacity:0.5">Google Gemini &amp; Lumina Studio</span>
+</footer>
+
+<!-- MODEL PICKER MODAL -->
+<div class="modal-overlay" id="modelModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+          Available Models
+        </div>
+        <div class="modal-sub">Live from your API key — click any row to use it</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="modelSearch" class="modal-search" placeholder="Filter models…" oninput="filterModels(this.value)">
+    </div>
+    <div class="modal-list" id="modelList"></div>
+  </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif"></div>
+
+
+</body>
+</html>
